@@ -1,0 +1,18 @@
+.container {
+    background-color: #f25353;
+    width: 400px;
+    font-size: 25px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    padding: 10px;
+
+
+    .container_vallue{
+        display: flex;
+        gap: 20px;
+    }
+    .container_vallue_title{
+        background-color: orange;
+    }
+}
