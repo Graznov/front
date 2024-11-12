@@ -8,26 +8,6 @@ import arr from "../storage.ts";
 
 const cx = classNames.bind(styles);
 
-// async function componentDidMount() {
-//     fetch("http://localhost:3000/movies")
-//         .then(response => response.json())
-//         .then(data => console.log(data))
-// }
-//
-// componentDidMount()
-
-// Пример отправки GET-запроса
-function App() {
-    fetch('http://localhost:3000/movies/', {
-        method: 'GET', // или 'POST', 'PUT', 'DELETE' в зависимости от запроса
-        headers: {id:'672d89c6f6537390b082ad64'}
-    })
-        .then(response => response.json())  // Парсим ответ в JSON
-        .then(data => console.log(data))     // Делаем что-то с полученными данными
-        .catch(error => console.error('Ошибка:', error));  // Обработка ошибок
-}
-
-App()
 
 
 
@@ -51,14 +31,13 @@ const Content = () =>{
 
     useEffect(() => {
 
-        // App()
+        fetch("http://localhost:3000/movies")
+            .then(response => response.json())
+            .then(data => dispatch(addMovie(data)))
 
-        // dispatch(addMovie(arr))
     }, []);
 
     const movies = useAppSelector(state => state.defSlice.movies)
-
-    // console.log(movies)
 
 
     return (
