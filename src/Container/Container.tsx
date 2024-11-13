@@ -5,7 +5,8 @@ import classNames from "classnames/bind";
 const cx = classNames.bind(styles);
 
 interface IProps {
-    // _id:string,
+    _id:string,
+    onClick?: () => void;
     title:string,
     director:string,
     year:number,
@@ -15,11 +16,11 @@ interface IProps {
 }
 
 
-const Container = ({title, director, year, genres, hours, minutes}:IProps) =>{
+const Container = ({title, director, year, genres, hours, minutes, onClick}:IProps) =>{
 
 
     return(
-        <div className={cx('container')}>
+        <div onClick={onClick} className={cx('container')}>
 
             <div className={cx('container_vallue')}>
                 <div className={cx('container_vallue_title')}>Название:</div>
