@@ -12,15 +12,19 @@ interface IProps {
     year:number,
     genres: Array<string>,
     hours:number,
-    minutes:number
+    minutes:number,
+    AddMomie?:()=>void,
+    DelMovie?:()=>void,
+    PatchMovie:()=>void
 }
 
 
-const Container = ({title, director, year, genres, hours, minutes, onClick}:IProps) =>{
+const Container = ({_id, title, director, year, genres, hours, minutes, onClick, AddMomie, DelMovie, PatchMovie}:IProps) =>{
 
 
     return(
         <div onClick={onClick} className={cx('container')}>
+            <div>{_id}</div>
 
             <div className={cx('container_vallue')}>
                 <div className={cx('container_vallue_title')}>Название:</div>
@@ -46,6 +50,10 @@ const Container = ({title, director, year, genres, hours, minutes, onClick}:IPro
                 <div className={cx('container_vallue_title')}>Продолжительность:</div>
                 <div>{hours} ч., {minutes} м.</div>
             </div>
+
+            <button onClick={AddMomie}>Выбрать</button>
+            <button onClick={DelMovie}>Удалить</button>
+            <button onClick={PatchMovie}>Редактировать</button>
 
         </div>
     )

@@ -16,4 +16,7 @@
     .container_vallue_title{
         background-color: orange;
     }
+    button{
+        padding: 10px;
+    }
 }
