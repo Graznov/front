@@ -18,66 +18,32 @@ interface IProps {
         hours:number,
         minutes:number
     }
-
 }
 
 const Content = () =>{
 
-    const dispatch = useAppDispatch()
+    // const dispatch = useAppDispatch()
+    // const movies = useAppSelector(state => state.defSlice.movies)
+
+    const [movies, setMovies] = useState([])
 
     function updMovies(){
+        console.log('updMovies()')
         fetch("http://localhost:3000/movies")
             .then(response => response.json())
-            .then(data => dispatch(addMovie(data)))
+            .then(data => setMovies(data))
+            .catch(error => console.error('Fetch error:', error));
     }
-    const movies = useAppSelector(state => state.defSlice.movies)
+
     useEffect(() => {
         updMovies()
-    }, [movies]);
-
-    // const clickCaerd = (i) =>{
-    //     console.log(i)
-    //     console.log('111')
-    // }
-
-
-
-// Предполагаем, что у вас есть данные из формы, которые нужно передать на бэкенд
-    const formData =     {
-            "duration": {
-                "hours": 7,
-                "minutes": 77
-            },
-            // "_id": "672cdc2524925866f5rHghb0566a",
-            "title": "TEST TEST TEST TEST TEST TEST",
-            "director": "TEST TEST TEST TEST TEST TEST",
-            "year": 7777,
-            "genres": [
-                "TEST",
-                "TEST",
-                "TEST",
-                "TEST"
-            ],
-        }
-
-        function moviePOST(mov){
-
-            fetch('http://localhost:3000/movies', {
-                method: 'POST', // Указываем метод запроса
-                headers: {
-                    'Content-Type': 'application/json' // Устанавливаем заголовок Content-Type для указания типа данных
-                },
-                body: JSON.stringify(mov) // Преобразуем данные в формат JSON и передаем в теле запроса
-            })
-        }
-
-
-
-// moviePOST(formData)
+        console.log('EFFECT')
+    }, []);
 
     const [postFormVisible, setPostFormVisible] = useState(false);
 
     const POST = {
+        // _id:0,
         duration: {
             hours: 0,
             minutes: 0
@@ -91,10 +57,10 @@ const Content = () =>{
         rating: 0,
     }
 
+    const [changeMovie, setChangeMovie] = useState(POST)
+
     const [postForm, setPostForm] = useState(POST)
-
-
-
+    const [changeFormVisible, setChangeFormVisible] = useState(false);
 
     return (
 
@@ -138,7 +104,7 @@ const Content = () =>{
                         <input
                             onChange={(event)=>{
 
-                                const value = event.target.value
+                                // const value = event.target.value
 
                                 setPostForm({
                                     ...postForm,
@@ -168,7 +134,8 @@ const Content = () =>{
                                 setPostForm({
                                     ...postForm,
                                     duration: {
-                                        hours: +event.target.value
+                                        hours: +event.target.value,
+                                        minutes: 0
                                     }
                                 })
 
@@ -190,8 +157,9 @@ const Content = () =>{
                             type="text"/>
                     </div>
                     <button
-                        onClick={()=>{
-                            fetch(`http://localhost:3000/movies/`, {
+                        onClick={async ()=>{
+                            console.log(postForm)
+                            await fetch(`http://localhost:3000/movies/`, {
                                 method: 'POST', // Указываем метод запроса
                                 headers: {
                                     'Content-Type': 'application/json' // Устанавливаем заголовок Content-Type для указания типа данных
@@ -201,29 +169,119 @@ const Content = () =>{
                             updMovies()
                             setPostForm(POST)
                             setPostFormVisible(!postFormVisible);
+
                         }}
                     >Добавить запись</button>
                 </div>
             </div>
+
+            <div className={cx('changeForm', {'changeFormVisible': changeFormVisible})}>
+                <div>{changeMovie._id}</div>
+                <div className={cx('container_vallue')}>
+                    <div className={cx('container_vallue_title')}>Название:</div>
+                    <input
+                        onChange={(event) => {
+                            setChangeMovie({
+                                ...changeMovie,
+                                title: event.target.value
+                            })
+                        }}
+                        value={changeMovie.title}
+                        type="text"/>
+                </div>
+                <div className={cx('container_vallue')}>
+                    <div className={cx('container_vallue_title')}>Режиссер:</div>
+                    <input
+                        onChange={(event) => {
+                            setChangeMovie({
+                                ...changeMovie,
+                                director: event.target.value
+                            })
+                        }}
+                        value={changeMovie.director}
+                        type="text"/></div>
+                <div className={cx('container_vallue')}>
+                    <div className={cx('container_vallue_title')}>Год:</div>
+                    <input
+                        onChange={(event) => {
+
+                            // const value = event.target.value
+
+                            setChangeMovie({
+                                ...changeMovie,
+                                year: +event.target.value
+                            })
+                        }}
+                        value={changeMovie.year}
+                        type="text"/></div>
+
+                <div className={cx('container_vallue')}>
+                    <div className={cx('container_vallue_title')}>Жанр:</div>
+                    <input
+                        onChange={(event) => {
+                            setChangeMovie({
+                                ...changeMovie,
+                                genres: [event.target.value]
+                            })
+                        }}
+                        value={changeMovie.genres}
+                        type="text"/></div>
+
+                <div className={cx('container_vallue_title')}>Продолжительность:</div>
+                <div>hours:</div>
+                <input
+                    onChange={(event) => {
+                        setChangeMovie({
+                            ...changeMovie,
+                            duration: {
+                                hours: +event.target.value,
+                                minutes: changeMovie.duration.minutes
+                            }
+                        })
+
+                    }}
+                    value={changeMovie.duration.hours}
+                    type="text"/>
+
+                <div>minutes:</div>
+                <input
+                    onChange={(event) => {
+                        setChangeMovie({
+                            ...changeMovie,
+                            duration: {
+                                hours: changeMovie.duration.hours,
+                                minutes: +event.target.value
+                            }
+                        })
+                    }}
+                    value={changeMovie.duration.minutes}
+                    type="text"/>
+
+                <button
+                    onClick={async () => {
+                        await fetch(`http://localhost:3000/movies/${changeMovie._id}`, {
+                            method: 'PATCH', // Указываем метод запроса
+                            headers: {
+                                'Content-Type': 'application/json' // Устанавливаем заголовок Content-Type для указания типа данных
+                            },
+                            body: JSON.stringify(changeMovie)
+                        })
+                        updMovies()
+                        setPostForm(POST)
+                        setChangeFormVisible(!changeFormVisible);
+                    }}
+                >Сохранить изменения
+                </button>
+
+
+            </div>
+
 
             <div className={cx('content')}>
 
                 {
                     movies.map((item: IProps) => (
                         <Container
-                            onClick={() => {
-                                console.log(item._id)
-                                console.log(movies.length)
-                                if (movies.length !== 1) {
-                                    // fetch(`http://localhost:3000/movies/${item._id}`)
-                                    //     .then(response => response.json())
-                                    //     .then(data => dispatch(addMovie([data])))
-                                } else {
-                                    // fetch("http://localhost:3000/movies")
-                                    //     .then(response => response.json())
-                                    //     .then(data => dispatch(addMovie(data)))
-                                }
-                            }}
                             _id={item._id}
                             key={item._id}
                             title={item.title}
@@ -232,20 +290,39 @@ const Content = () =>{
                             genres={item.genres}
                             hours={item.duration.hours}
                             minutes={item.duration.minutes}
-                            addMomie={() => {
-                                fetch(`http://localhost:3000/movies/${item._id}`)
-                                    .then(response => response.json())
-                                    .then(data => dispatch(addMovie([data])))
-                                updMovies()
+                            AddMovie={() => {
+                                console.log(item._id)
+                                console.log(movies.length)
+                                if (movies.length !== 1) {
+                                        fetch(`http://localhost:3000/movies/${item._id}`)
+                                            .then(response => response.json())
+                                            // .then(data => dispatch(addMovie([data])))
+                                            .then(data => setMovies([data]))
+                                            .catch(error => console.error('Fetch error:', error));
+                                    } else {
+                                        fetch("http://localhost:3000/movies")
+                                            .then(response => response.json())
+                                            // .then(data => dispatch(addMovie(data)))
+                                            .then(data => setMovies(data))
+                                            .catch(error => console.error('Fetch error:', error));
+
+                                    }
                             }}
-                            DelMovie={() => {
-                                fetch(`http://localhost:3000/movies/${item._id}`, {
+                            DelMovie={async () => {
+                               await fetch(`http://localhost:3000/movies/${item._id}`, {
                                     method: 'DELETE', // Указываем метод запроса
                                     headers: {
                                         'Content-Type': 'application/json' // Устанавливаем заголовок Content-Type для указания типа данных
                                     },
                                 })
                                 updMovies()
+                                console.log(movies)
+                            }}
+                            PatchMovie={async ()=>{
+                                setChangeFormVisible(!changeFormVisible);
+                                await setChangeMovie(item)
+                                console.log(`push PUTCH\nid: ${item._id}\ntitle: ${item.title}\nchangeFormVisible: ${changeFormVisible}`);
+                                console.log(changeMovie)
                             }}
                         />
                     ))

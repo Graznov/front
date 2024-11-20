@@ -1,7 +1,6 @@
 import styles from './container.module.css'
 import classNames from "classnames/bind";
 
-
 const cx = classNames.bind(styles);
 
 interface IProps {
@@ -13,14 +12,12 @@ interface IProps {
     genres: Array<string>,
     hours:number,
     minutes:number,
-    AddMomie?:()=>void,
+    AddMovie?:()=>void,
     DelMovie?:()=>void,
     PatchMovie:()=>void
 }
 
-
-const Container = ({_id, title, director, year, genres, hours, minutes, onClick, AddMomie, DelMovie, PatchMovie}:IProps) =>{
-
+const Container = ({_id, title, director, year, genres, hours, minutes, onClick, AddMovie, DelMovie, PatchMovie}:IProps) =>{
 
     return(
         <div onClick={onClick} className={cx('container')}>
@@ -51,7 +48,7 @@ const Container = ({_id, title, director, year, genres, hours, minutes, onClick,
                 <div>{hours} ч., {minutes} м.</div>
             </div>
 
-            <button onClick={AddMomie}>Выбрать</button>
+            <button onClick={AddMovie}>Выбрать</button>
             <button onClick={DelMovie}>Удалить</button>
             <button onClick={PatchMovie}>Редактировать</button>
 
